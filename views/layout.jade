@@ -1,0 +1,15 @@
+doctype html
+html(ng-app='FruitMarket')
+  head
+    title= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body(ng-controller='FruitMarketCtrl')
+    block content
+
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js')
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/app.js')
+  script(src='/javascripts/services.js')
+  script(src='/javascripts/controllers.js')

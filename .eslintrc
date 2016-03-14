@@ -1,0 +1,16 @@
+{
+  "env": {
+    "node" : true
+  },
+  "globals": {
+    "angular": 1,
+    "app": 1,
+    "io": 1
+  },
+  "rules": {
+    "no-mixed-requires": 0,
+    "no-underscore-dangle": 0,
+    "quotes": [2, "single"],
+    "strict": 0
+  }
+}
