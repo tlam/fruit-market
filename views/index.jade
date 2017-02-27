@@ -130,68 +130,68 @@ block content
         b * 2 fruits same color:
         em  This action is only possible if there are at least 4 tokens of the chosen color left when the player takes them.
 
-    mixin card_mixin(card, area)
-      div.card(ng-click="selected(card, '#{area}')", ng-class="cardClass(card, '#{area}')")
-        div.top
-          div.vp {{card.vp}}
-          div.give
-            span(ng-if="card.kiwi > 0")
-              img(src="/images/fruits/kiwi.png")
-            span(ng-if="card.dragonFruit > 0")
-              img(src="/images/fruits/dragon_fruit.png")
-            span(ng-if="card.plum > 0")
-              img(src="/images/fruits/plum.png")
-            span(ng-if="card.olive > 0")
-              img(src="/images/fruits/olive.png")
-            span(ng-if="card.strawberry > 0")
-              img(src="/images/fruits/strawberry.png")
-        div.kiwi-cost(ng-if="card.kiwiCost > 0") {{card.kiwiCost}}
-        div.dragon-fruit-cost(ng-if="card.dragonFruitCost > 0") {{card.dragonFruitCost}}
-        div.plum-cost(ng-if="card.plumCost > 0") {{card.plumCost}}
-        div.olive-cost(ng-if="card.oliveCost > 0") {{card.oliveCost}}
-        div.strawberry-cost(ng-if="card.strawberryCost > 0") {{card.strawberryCost}}
-
-    mixin player_mixin(player)
-      div.fruits.row
-        div.fruit
+mixin card_mixin(card, area)
+  div.card(ng-click="selected(card, '#{area}')", ng-class="cardClass(card, '#{area}')")
+    div.top
+      div.vp {{card.vp}}
+      div.give
+        span(ng-if="card.kiwi > 0")
           img(src="/images/fruits/kiwi.png")
-          div.total {{player.kiwiToken}}
-        div.fruit
+        span(ng-if="card.dragonFruit > 0")
           img(src="/images/fruits/dragon_fruit.png")
-          div.total {{player.dragonFruitToken}}
-        div.fruit
+        span(ng-if="card.plum > 0")
           img(src="/images/fruits/plum.png")
-          div.total {{player.plumToken}}
-        div.fruit
+        span(ng-if="card.olive > 0")
           img(src="/images/fruits/olive.png")
-          div.total {{player.oliveToken}}
-        div.fruit
+        span(ng-if="card.strawberry > 0")
           img(src="/images/fruits/strawberry.png")
-          div.total {{player.strawberryToken}}
-        div.fruit
-          img(src="/images/fruits/pineapple.png")
-          div.total {{player.pineapple}}
-      div.row.tableau
-        div.col-md-2
-          div(ng-repeat="card in player.kiwiCards track by $index", class="stack stack-{{$index}}")
-            +card_mixin("{{card}}", "hand")
-        div.col-md-2
-          div(ng-repeat="card in player.dragonFruitCards track by $index", class="stack stack-{{$index}}")
-            +card_mixin("{{card}}", "hand")
-        div.col-md-2
-          div(ng-repeat="card in player.plumCards track by $index", class="stack stack-{{$index}}")
-            +card_mixin("{{card}}", "hand")
-        div.col-md-2
-          div(ng-repeat="card in player.oliveCards track by $index", class="stack stack-{{$index}}")
-            +card_mixin("{{card}}", "hand")
-        div.col-md-2
-          div(ng-repeat="card in player.strawberryCards track by $index", class="stack stack-{{$index}}")
-            +card_mixin("{{card}}", "hand")
-      div.row
-        h4 Reserved
-        div(ng-repeat="card in player.reserved")
-          +card_mixin("{{card}}", "development")
-      div.row
-        h4 Merchants
-        div.merchants(ng-repeat="merchant in player.merchants")
-          img(src="/images/merchants/{{merchant.image}}")
+    div.kiwi-cost(ng-if="card.kiwiCost > 0") {{card.kiwiCost}}
+    div.dragon-fruit-cost(ng-if="card.dragonFruitCost > 0") {{card.dragonFruitCost}}
+    div.plum-cost(ng-if="card.plumCost > 0") {{card.plumCost}}
+    div.olive-cost(ng-if="card.oliveCost > 0") {{card.oliveCost}}
+    div.strawberry-cost(ng-if="card.strawberryCost > 0") {{card.strawberryCost}}
+
+mixin player_mixin(player)
+  div.fruits.row
+    div.fruit
+      img(src="/images/fruits/kiwi.png")
+      div.total {{player.kiwiToken}}
+    div.fruit
+      img(src="/images/fruits/dragon_fruit.png")
+      div.total {{player.dragonFruitToken}}
+    div.fruit
+      img(src="/images/fruits/plum.png")
+      div.total {{player.plumToken}}
+    div.fruit
+      img(src="/images/fruits/olive.png")
+      div.total {{player.oliveToken}}
+    div.fruit
+      img(src="/images/fruits/strawberry.png")
+      div.total {{player.strawberryToken}}
+    div.fruit
+      img(src="/images/fruits/pineapple.png")
+      div.total {{player.pineapple}}
+  div.row.tableau
+    div.col-md-2
+      div(ng-repeat="card in player.kiwiCards track by $index", class="stack stack-{{$index}}")
+        +card_mixin("{{card}}", "hand")
+    div.col-md-2
+      div(ng-repeat="card in player.dragonFruitCards track by $index", class="stack stack-{{$index}}")
+        +card_mixin("{{card}}", "hand")
+    div.col-md-2
+      div(ng-repeat="card in player.plumCards track by $index", class="stack stack-{{$index}}")
+        +card_mixin("{{card}}", "hand")
+    div.col-md-2
+      div(ng-repeat="card in player.oliveCards track by $index", class="stack stack-{{$index}}")
+        +card_mixin("{{card}}", "hand")
+    div.col-md-2
+      div(ng-repeat="card in player.strawberryCards track by $index", class="stack stack-{{$index}}")
+        +card_mixin("{{card}}", "hand")
+  div.row
+    h4 Reserved
+    div(ng-repeat="card in player.reserved")
+      +card_mixin("{{card}}", "development")
+  div.row
+    h4 Merchants
+    div.merchants(ng-repeat="merchant in player.merchants")
+      img(src="/images/merchants/{{merchant.image}}")
