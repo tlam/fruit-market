@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <start-game></start-game>
-    <hello></hello>
   </div>
 </template>
 

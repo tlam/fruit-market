@@ -11,15 +11,40 @@
     <div class="alert alert-info" role="alert">
       <div>{{msg}}</div>
     </div>
+
+    <div v-if="board.lineThree" class="row development">
+      <div class="col-md-2"> III ({{board.deckThree.length}})</div>
+      <div v-for="card in board.lineThree" class="col-md-2">
+        <card area="development" :card="card"></card>
+      </div>
+    </div>
+    <div v-if="board.deckTwo" class="row development">
+      <div class="col-md-2"> II ({{board.deckTwo.length}})</div>
+      <div v-for="card in board.lineTwo" class="col-md-2">
+        <card area="development" :card="card"></card>
+      </div>
+    </div>
+    <div v-if="board.deckOne" class="row development">
+      <div class="col-md-2"> I ({{board.deckOne.length}})</div>
+      <div v-for="card in board.lineOne" class="col-md-2">
+        <card area="development" :card="card"></card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Card from './Card.vue'
+
 export default {
   name: 'start-game',
+  components: {
+    Card
+  },
   data () {
     return {
       board: {},
+      cost: {},
       currentPlayer: {},
       fruits:['dragonFruit', 'kiwi', 'olive', 'strawberry', 'plum'],
       msg: 'Start game',
@@ -38,6 +63,7 @@ export default {
         plum: 0
       },
       selectedCard: null,
+      show: false,
       taken: {
         dragonFruit: 0,
         kiwi: 0,
