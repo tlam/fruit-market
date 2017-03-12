@@ -1,5 +1,5 @@
 <template>
-<div v-if="card" class="card"> <!--(ng-click="selected(card, '#{area}')", ng-class="cardClass(card, '#{area}')")-->
+<div v-if="card" class="card" v-bind:class="classObject" v-on:click="selected">
   <div class="top">
     <div class="vp">{{card.vp}}</div>
     <div class="give">
@@ -17,13 +17,31 @@
   <div v-if="card.strawberryCost > 0" class="strawberry-cost">{{card.strawberryCost}}</div>
 </div>
 </template>
+
 <script>
 export default {
   name: 'card',
   data () {
     return {
+      active: false
     }
   },
-  props: ['area', 'card']
+  props: ['area', 'card', 'selectedCard'],
+  computed: {
+    classObject: function() {
+      var cardSelected = false;
+      if (this.area === 'development' && this.selectedCard && this.card) {
+        cardSelected = this.card._id === this.selectedCard._id;
+      }
+      return {
+        'card-selected': cardSelected
+      }
+    }
+  },
+  methods: {
+    selected: function() {
+      this.$emit('selected');
+    }
+  }
 }
 </script>
