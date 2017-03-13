@@ -4,17 +4,6 @@ var express = require('express')
   , Merchant = require('../models/merchant.js');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  Merchant.find({}, function(err, merchants) {
-    var context = {
-      merchants: merchants,
-      title: 'Fruit Market'
-    }
-    res.render('index', context);
-  });
-});
-
 router.get('/load_cards', function(req, res, next) {
   var output = fs.readFileSync('models/fixtures/merchants.json');
   var merchants = JSON.parse(output);
@@ -55,7 +44,7 @@ router.get('/load_cards', function(req, res, next) {
     newCard.save();
   }
 
-  res.render('load_cards', {});
+  res.json({message: 'Loaded!'});
 });
 
 module.exports = router;
