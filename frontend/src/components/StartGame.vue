@@ -167,43 +167,32 @@ export default {
     Player
   },
   data () {
+    var fruits = ['dragonFruit', 'kiwi', 'olive', 'strawberry', 'plum'];
+    var paid = {};
+    var playerDevelopment = {};
+    var taken = {};
+    var tokenSpent = {
+      pineapple: 0
+    };
+    for (let fruit of fruits) {
+      paid[fruit] = 0;
+      playerDevelopment[fruit] = 0;
+      taken[fruit] = 0;
+      tokenSpent[fruit] = 0;
+    }
+
     return {
       board: {},
       cost: {},
       currentPlayer: {},
-      fruits:['dragonFruit', 'kiwi', 'olive', 'strawberry', 'plum'],
+      fruits: fruits,
       msg: 'Start game',
-      paid: {
-        dragonFruit: 0,
-        kiwi: 0,
-        olive: 0,
-        strawberry: 0,
-        plum: 0
-      },
-      playerDevelopment: {
-        dragonFruit: 0,
-        kiwi: 0,
-        olive: 0,
-        strawberry: 0,
-        plum: 0
-      },
+      paid: paid,
+      playerDevelopment: playerDevelopment,
       selectedCard: null,
       show: false,
-      taken: {
-        dragonFruit: 0,
-        kiwi: 0,
-        olive: 0,
-        strawberry: 0,
-        plum: 0
-      },
-      tokenSpent: {
-        dragonFruit: 0,
-        kiwi: 0,
-        olive: 0,
-        strawberry: 0,
-        plum: 0,
-        pineapple: 0
-      }
+      taken: taken,
+      tokenSpent: tokenSpent
     }
   },
   methods: {
@@ -235,10 +224,7 @@ export default {
       }
     },
     endTurn: function() {
-      console.log(this.board.players);
-      for (var i = 0; i < this.board.players.length; i++) {
-        let player = this.board.players[i];
-        console.log(player);
+      for (let player of this.board.players) {
         if (player.isTurn) {
           console.log('Ending turn');
           this.$socket.emit('end turn', {
@@ -262,15 +248,12 @@ export default {
       }
     },
     reset: function() {
-      for (var fruit in this.paid) {
+      for (let fruit of this.fruits) {
         this.paid[fruit] = 0;
-      }
-      for (var fruit in this.taken) {
         this.taken[fruit] = 0;
-      }
-      for (var fruit in this.tokenSpent) {
         this.tokenSpent[fruit] = 0;
       }
+      this.tokenSpent.pineapple = 0;
       this.selectedCard = null;
     },
     resume: function(event) {
@@ -284,7 +267,6 @@ export default {
       this.cost.olive = card.oliveCost;
       this.cost.strawberry = card.strawberryCost;
       this.cost.plum = card.plumCost;
-      console.log(this.cost);
     },
     selectToken: function(token) {
       if (this.fruits.indexOf(token) > -1 && this.cost[token] > 0 && this.paid[token] < this.currentPlayer[token]) {
@@ -292,7 +274,7 @@ export default {
         this.tokenSpent[token] += 1;
       }
       else if (token === 'pineapple' && this.tokenSpent[token] < this.currentPlayer.pineapple) {
-        for (var fruit in this.cost) {
+        for (let fruit in this.cost) {
           console.log('looping ' + fruit);
           console.log(this.paid[fruit] + this.playerDevelopment[fruit]);
           console.log(this.currentPlayer[fruit]);
