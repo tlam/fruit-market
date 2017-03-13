@@ -8,7 +8,7 @@
     <button v-on:click="start">Start</button>
     <button v-on:click="resume">Resume</button>
 
-    <div class="alert alert-info" role="alert">
+    <div v-if="msg" class="alert alert-info" role="alert">
       <div>{{msg}}</div>
     </div>
 
@@ -145,7 +145,7 @@
 
     <div v-for="player in board.players">
       <h3> Player {{player.number}}, VP: {{player.vp}}, Turn: {{player.isTurn}}</h3>
-      <player :player="player"></player>
+      <player :player="player" :selectedCard="selectedCard" v-on:selected="selectCard"></player>
     </div>
     <p>
       <b> * 2 fruits same color:</b>
@@ -222,7 +222,7 @@ export default {
           (strawberryCost === 0 || (strawberryCost > 0 && strawberryCost <= this.paid.strawberry + this.playerDevelopment.strawberry)) &&
           (plumCost === 0 || (plumCost > 0 && plumCost <= this.paid.plum + this.playerDevelopment.plum));
         if (costMet) {
-          console.log('Cost met');
+          console.log('Cost met for ' + this.selectedCard._id);
           this.$socket.emit('buy', {
             card: this.selectedCard._id,
             paid: this.tokenSpent,
@@ -276,31 +276,17 @@ export default {
     resume: function(event) {
       this.$socket.emit('resume', {});
     },
-    selectCard: function(card, area) {
+    selectCard: function(card) {
+      console.log('Selecting card');
       this.selectedCard = card;
-      for (var i = 0; i < this.fruits.length; i++) {
-        let fruit = this.fruits[i];
-        var cost = '';
-        if (fruit === 'dragonFruit') {
-          cost = card.dragonFruitCost;
-        }
-        else if (fruit === 'kiwi') {
-          cost = card.kiwiCost;
-        }
-        else if (fruit === 'olive') {
-          cost = card.oliveCost;
-        }
-        else if (fruit === 'strawberry') {
-          cost = card.strawberryCost;
-        }
-        else if (fruit === 'plum') {
-          cost = card.plumCost;
-        }
-        this.cost[fruit] = cost;
-      }
+      this.cost.dragonFruit = card.dragonFruitCost;
+      this.cost.kiwi = card.kiwiCost;
+      this.cost.olive = card.oliveCost;
+      this.cost.strawberry = card.strawberryCost;
+      this.cost.plum = card.plumCost;
+      console.log(this.cost);
     },
     selectToken: function(token) {
-      console.log('Selected token is ' + token);
       if (this.fruits.indexOf(token) > -1 && this.cost[token] > 0 && this.paid[token] < this.currentPlayer[token]) {
         this.paid[token] += 1;
         this.tokenSpent[token] += 1;
