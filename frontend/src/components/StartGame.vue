@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="row">
-          <div v-if="selectedCard !== null && show">
+          <div v-if="show">
             <div class="fruit-summary">
               <div class="summary-label">Cost</div>
               <div class="kiwi-cost">{{selectedCard.kiwiCost}}</div>
@@ -127,25 +127,25 @@
     <div v-if="board.lineThree" class="row development">
       <div class="col-md-2"> III ({{board.deckThree.length}})</div>
       <div v-for="card in board.lineThree" class="col-md-2">
-        <card area="development" :card="card" :selectedCard="selectedCard" v-on:selected="selectCard(card)"></card>
+        <card area="development" :card="card"></card>
       </div>
     </div>
     <div v-if="board.deckTwo" class="row development">
       <div class="col-md-2"> II ({{board.deckTwo.length}})</div>
       <div v-for="card in board.lineTwo" class="col-md-2">
-        <card area="development" :card="card" :selectedCard="selectedCard" v-on:selected="selectCard(card)"></card>
+        <card area="development" :card="card"></card>
       </div>
     </div>
     <div v-if="board.deckOne" class="row development">
       <div class="col-md-2"> I ({{board.deckOne.length}})</div>
       <div v-for="card in board.lineOne" class="col-md-2">
-        <card area="development" :card="card" :selectedCard="selectedCard" v-on:selected="selectCard(card)"></card>
+        <card area="development" :card="card"></card>
       </div>
     </div>
 
     <div v-for="player in board.players">
       <h3> Player {{player.number}}, VP: {{player.vp}}, Turn: {{player.isTurn}}</h3>
-      <player :player="player" :selectedCard="selectedCard" v-on:selected="selectCard"></player>
+      <player :player="player"></player>
     </div>
     <p>
       <b> * 2 fruits same color:</b>
@@ -197,13 +197,21 @@ export default {
   },
   methods: {
     buy: function() {
-      this.show = true;
+      var selectedCard = this.$store.state.selectedCard;
+      this.show = selectedCard !== null;
+      console.log(selectedCard);
+      console.log(this.show);
       if (this.currentPlayer.isTurn) {
-        var dragonFruitCost = this.selectedCard.dragonFruitCost;
-        var kiwiCost = this.selectedCard.kiwiCost;
-        var oliveCost = this.selectedCard.oliveCost;
-        var strawberryCost = this.selectedCard.strawberryCost;
-        var plumCost = this.selectedCard.plumCost;
+        this.selectedCard = selectedCard;
+        var dragonFruitCost = selectedCard.dragonFruitCost;
+        var kiwiCost = selectedCard.kiwiCost;
+        var oliveCost = selectedCard.oliveCost;
+        var strawberryCost = selectedCard.strawberryCost;
+        var plumCost = selectedCard.plumCost;
+        console.log(selectedCard);
+        console.log('Kiwi cost ' + kiwiCost);
+        console.log('Olive cost ' + oliveCost);
+        console.log('Strawberry cost ' + strawberryCost);
 
         var costMet = (dragonFruitCost === 0 || (dragonFruitCost > 0 && dragonFruitCost <= this.paid.dragonFruit + this.playerDevelopment.dragonFruit)) &&
           (kiwiCost === 0 || (kiwiCost > 0 && kiwiCost <= this.paid.kiwi + this.playerDevelopment.kiwi)) &&
@@ -211,9 +219,9 @@ export default {
           (strawberryCost === 0 || (strawberryCost > 0 && strawberryCost <= this.paid.strawberry + this.playerDevelopment.strawberry)) &&
           (plumCost === 0 || (plumCost > 0 && plumCost <= this.paid.plum + this.playerDevelopment.plum));
         if (costMet) {
-          console.log('Cost met for ' + this.selectedCard._id);
+          console.log('Cost met for ' + selectedCard._id);
           this.$socket.emit('buy', {
-            card: this.selectedCard._id,
+            card: selectedCard._id,
             paid: this.tokenSpent,
             player: this.currentPlayer._id
           });
@@ -240,9 +248,10 @@ export default {
       }
     },
     reserve: function() {
-      if (this.selectedCard !== null) {
+      var selectedCard = this.$store.state.selectedCard;
+      if (selectedCard !== null) {
         this.$socket.emit('reserve', {
-          card: this.selectedCard._id,
+          card: selectedCard._id,
           player: this.currentPlayer._id
         });
       }
@@ -254,14 +263,17 @@ export default {
         this.tokenSpent[fruit] = 0;
       }
       this.tokenSpent.pineapple = 0;
-      this.selectedCard = null;
+      this.$store.commit('resetSelectedCard');
     },
     resume: function(event) {
       this.$socket.emit('resume', {});
     },
-    selectCard: function(card) {
+    selectCard: function() {
       console.log('Selecting card');
-      this.selectedCard = card;
+      console.log('Store value ' + this.$store.state.selectedCard);
+      console.log(this.$store.state.selectedCard.kiwiCost);
+      console.log(this.$store.state.selectedCard.plumCost);
+      var card = this.$store.state.selectedCard;
       this.cost.dragonFruit = card.dragonFruitCost;
       this.cost.kiwi = card.kiwiCost;
       this.cost.olive = card.oliveCost;
@@ -269,16 +281,17 @@ export default {
       this.cost.plum = card.plumCost;
     },
     selectToken: function(token) {
-      if (this.fruits.indexOf(token) > -1 && this.cost[token] > 0 && this.paid[token] < this.currentPlayer[token]) {
+      var cost = this.$store.state.cost;
+      if (this.fruits.indexOf(token) > -1 && cost[token] > 0 && this.paid[token] < this.currentPlayer[token]) {
         this.paid[token] += 1;
         this.tokenSpent[token] += 1;
       }
       else if (token === 'pineapple' && this.tokenSpent[token] < this.currentPlayer.pineapple) {
-        for (let fruit in this.cost) {
+        for (let fruit in cost) {
           console.log('looping ' + fruit);
           console.log(this.paid[fruit] + this.playerDevelopment[fruit]);
           console.log(this.currentPlayer[fruit]);
-          if (this.cost[fruit] > 0 && this.paid[fruit] + this.playerDevelopment[fruit] < this.cost[fruit]) {
+          if (cost[fruit] > 0 && this.paid[fruit] + this.playerDevelopment[fruit] < cost[fruit]) {
             console.log('selecting pineapple');
             this.paid[fruit] += 1;
             this.tokenSpent[token] += 1;

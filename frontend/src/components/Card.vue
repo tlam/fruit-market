@@ -30,8 +30,9 @@ export default {
   computed: {
     classObject: function() {
       var cardSelected = false;
-      if (this.area === 'development' && this.selectedCard && this.card) {
-        cardSelected = this.card._id === this.selectedCard._id;
+      var selectedCard = this.$store.state.selectedCard;
+      if (this.area === 'development' && selectedCard && this.card) {
+        cardSelected = this.card._id === selectedCard._id;
       }
       return {
         'card-selected': cardSelected
@@ -40,6 +41,9 @@ export default {
   },
   methods: {
     selected: function() {
+      this.$store.commit('setSelectedCard', {
+        card: this.card
+      });
       this.$emit('selected');
     }
   }
