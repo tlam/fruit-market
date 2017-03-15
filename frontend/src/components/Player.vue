@@ -56,7 +56,7 @@
   <div class="row">
     <h4>Reserved</h4>
     <div v-for="card in player.reserved">
-      <card area="development" :card="card" :selectedCard="selectedCard" v-on:selected="selectCard(card)"></card>
+      <card area="development" :card="card"></card>
     </div>
   </div>
   <div class="row">
@@ -80,11 +80,6 @@ export default {
     return {
     }
   },
-  props: ['player', 'selectedCard'],
-  methods: {
-    selectCard: function(card) {
-      this.$emit('selected', card);
-    }
-  }
+  props: ['player']
 }
 </script>

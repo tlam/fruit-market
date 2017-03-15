@@ -4,10 +4,12 @@
 import VueSocketio from 'vue-socket.io'
 import Vue from 'vue'
 import App from './App.vue'
+import store from './store'
 
 Vue.use(VueSocketio, 'http://localhost:3000');
 
 new Vue({ // eslint-disable-line no-new
   el: '#app',
+  store,
   render: (h) => h(App)
 })
