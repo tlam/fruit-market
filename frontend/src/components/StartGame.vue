@@ -199,19 +199,13 @@ export default {
     buy: function() {
       var selectedCard = this.$store.state.selectedCard;
       this.show = selectedCard !== null;
-      console.log(selectedCard);
-      console.log(this.show);
-      if (this.currentPlayer.isTurn) {
+      if (this.currentPlayer.isTurn && selectedCard) {
         this.selectedCard = selectedCard;
         var dragonFruitCost = selectedCard.dragonFruitCost;
         var kiwiCost = selectedCard.kiwiCost;
         var oliveCost = selectedCard.oliveCost;
         var strawberryCost = selectedCard.strawberryCost;
         var plumCost = selectedCard.plumCost;
-        console.log(selectedCard);
-        console.log('Kiwi cost ' + kiwiCost);
-        console.log('Olive cost ' + oliveCost);
-        console.log('Strawberry cost ' + strawberryCost);
 
         var costMet = (dragonFruitCost === 0 || (dragonFruitCost > 0 && dragonFruitCost <= this.paid.dragonFruit + this.playerDevelopment.dragonFruit)) &&
           (kiwiCost === 0 || (kiwiCost > 0 && kiwiCost <= this.paid.kiwi + this.playerDevelopment.kiwi)) &&
@@ -220,6 +214,7 @@ export default {
           (plumCost === 0 || (plumCost > 0 && plumCost <= this.paid.plum + this.playerDevelopment.plum));
         if (costMet) {
           console.log('Cost met for ' + selectedCard._id);
+          this.show = false;
           this.$socket.emit('buy', {
             card: selectedCard._id,
             paid: this.tokenSpent,
@@ -263,22 +258,10 @@ export default {
         this.tokenSpent[fruit] = 0;
       }
       this.tokenSpent.pineapple = 0;
-      this.$store.commit('resetSelectedCard');
+      this.$store.commit('reset');
     },
     resume: function(event) {
       this.$socket.emit('resume', {});
-    },
-    selectCard: function() {
-      console.log('Selecting card');
-      console.log('Store value ' + this.$store.state.selectedCard);
-      console.log(this.$store.state.selectedCard.kiwiCost);
-      console.log(this.$store.state.selectedCard.plumCost);
-      var card = this.$store.state.selectedCard;
-      this.cost.dragonFruit = card.dragonFruitCost;
-      this.cost.kiwi = card.kiwiCost;
-      this.cost.olive = card.oliveCost;
-      this.cost.strawberry = card.strawberryCost;
-      this.cost.plum = card.plumCost;
     },
     selectToken: function(token) {
       var cost = this.$store.state.cost;

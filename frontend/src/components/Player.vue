@@ -80,13 +80,6 @@ export default {
     return {
     }
   },
-  props: ['player', 'selectedCard'],
-  methods: {
-      /*
-    selectCard: function(card) {
-      this.$emit('selected', card);
-    }
-    */
-  }
+  props: ['player']
 }
 </script>

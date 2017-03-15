@@ -9,7 +9,8 @@ export default new Vuex.Store({
     selectedCard: null
   },
   mutations: {
-    resetSelectedCard(state) {
+    reset(state) {
+      state.cost = {};
       state.selectedCard = null;
     },
     setSelectedCard(state, payload) {

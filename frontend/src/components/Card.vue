@@ -26,7 +26,7 @@ export default {
       active: false
     }
   },
-  props: ['area', 'card', 'selectedCard'],
+  props: ['area', 'card'],
   computed: {
     classObject: function() {
       var cardSelected = false;
@@ -44,7 +44,6 @@ export default {
       this.$store.commit('setSelectedCard', {
         card: this.card
       });
-      this.$emit('selected');
     }
   }
 }
